@@ -27,6 +27,7 @@ export const buySubsription = catchAsyncError(async (req, res, next) => {
 
   res.status(201).json({
     success: true,
+    subscriptionId,
   });
 });
 
@@ -80,20 +81,20 @@ export const cancelSubscription = catchAsyncError(async (req, res, next) => {
 
   instance.subscriptions.cancel(subscriptionId);
 
-  // const payment = await Payment.findOne({
-  //   razorpay_subscription_id: subscriptionId,
-  // });
+  const payment = await Payment.findOne({
+    razorpay_subscription_id: subscriptionId,
+  });
 
-  // const gap = Date.now() - payment.createdAt;
+  const gap = Date.now() - payment.createdAt;
 
-  // const refundTime = process.env.REFUND_DAYS * 24 * 60 * 60 * 1000;
+  const refundTime = process.env.REFUND_DAYS * 24 * 60 * 60 * 1000;
 
-  // if (refundTime > gap) {
-  //   instance.payments.refund(payment.razorpay_payment_id);
-  //   refund = true;
-  // }
+  if (refundTime > gap) {
+    instance.payments.refund(payment.razorpay_payment_id);
+    refund = true;
+  }
 
-  // await payment.deleteOne();
+  await payment.deleteOne();
 
   user.subscription.id = undefined;
   user.subscription.status = undefined;
