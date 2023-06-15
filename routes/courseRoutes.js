@@ -18,7 +18,7 @@ const router = express.Router();
 
 //get all courses without lectures
 
-router.route("/courses").get(getAllCourses);
+router.route("/courses").get(isAuthenticated, getAllCourses);
 
 // create new courses - only admin
 router
