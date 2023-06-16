@@ -9,11 +9,11 @@ export const buySubsription = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.user._id);
 
   if (user.role === "admin")
-    return next(new ErrorHandler("admin can buy subscription", 400));
+    return next(new ErrorHandler("admin can't buy subscription", 400));
 
-  const plan_id = process.env.PLAN_ID || "plan_LwCqFzifZrjvVm";
+  const plan_id = process.env.PLAN_ID || "plan_M2TvqrwLM3LBYx";
 
-  const subscription = instance.subscriptions.create({
+  const subscription = await instance.subscriptions.create({
     plan_id,
     customer_notify: 1,
     total_count: 12,
@@ -27,7 +27,7 @@ export const buySubsription = catchAsyncError(async (req, res, next) => {
 
   res.status(201).json({
     success: true,
-    subscriptionId,
+    subscriptionId: subscription.id,
   });
 });
 
