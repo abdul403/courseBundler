@@ -48,7 +48,7 @@ export const createCourse = catchAsyncError(async (req, res, next) => {
     createdBy,
     poster: {
       public_id: myCloud.public_id,
-      url: myCloud.secure_url,
+      url: myCloud.secure_url, 
     },
   });
 
